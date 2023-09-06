@@ -1,5 +1,7 @@
 This is a web chat app build using [Next.js](https://nextjs.org/) and [Amplify](https://aws.amazon.com/amplify/) to easily build our backend
 
+#This project is working but it's not finished
+
 ## AWS services that this application uses
 
 1. "Cognito" for authentication
