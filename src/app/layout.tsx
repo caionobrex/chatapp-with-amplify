@@ -1,6 +1,10 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import { Amplify } from 'aws-amplify'
+import awsConfig from '@/aws-exports'
+
+Amplify.configure(awsConfig)
 
 const inter = Inter({ subsets: ['latin'] })
 
