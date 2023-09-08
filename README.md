@@ -8,6 +8,7 @@ This is a web chat app build using [Next.js](https://nextjs.org/) and [Amplify](
 2. "AppSync" for our API (using GRAPHQL)
 3. "DynamoDB" for persistence
 4. "S3" for file storage.
+5. "Lambda Function" for PostConfirmation with cognito
 
 ## Getting Started
 
