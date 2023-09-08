@@ -17,6 +17,12 @@
       },
       "api": {
         "chatapp": {}
+      },
+      "function": {
+        "PostConfirmation": {
+          "deploymentBucketName": "amplify-chatapp-dev-173314-deployment",
+          "s3Key": "amplify-builds/PostConfirmation-55514545545455374c48-build.zip"
+        }
       }
     }
   }

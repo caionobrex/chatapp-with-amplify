@@ -214,11 +214,6 @@ export const listMessages = /* GraphQL */ `
         by {
           id
           username
-          createdAt
-          updatedAt
-          roomUsersId
-          owner
-          __typename
         }
         createdAt
         updatedAt

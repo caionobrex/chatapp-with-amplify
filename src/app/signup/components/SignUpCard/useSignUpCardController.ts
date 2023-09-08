@@ -1,10 +1,14 @@
-import { API, Amplify, Auth } from 'aws-amplify'
-import { useEffect, useState } from "react"
+import awsConfig from '@/aws-exports'
+import { Amplify, Auth } from 'aws-amplify'
+import { useState } from "react"
+
+Amplify.configure(awsConfig)
 
 export const useSignUpCardController = () => {
   const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [file, setFile] = useState<File | null | undefined>(null)
+  // const [file, setFile] = useState<File | null | undefined>(null)
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.currentTarget.value)
@@ -14,24 +18,32 @@ export const useSignUpCardController = () => {
     setPassword(e.currentTarget.value)
   }
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFile(e.currentTarget.files?.item(0))
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.currentTarget.value)
   }
+
+  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setFile(e.currentTarget.files?.item(0))
+  // }
 
   const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     try {
       await Auth.signUp({
-        username: 'caio',
+        username,
         password,
         autoSignIn: {
           enabled: true,
         },
         attributes: {
-          email: username
+          email
         },
       })
-      alert('success')
+      const confirmationCode = prompt('Enter confirmation code')
+      if (confirmationCode) {
+        Auth.confirmSignUp(username, confirmationCode)
+        alert('success')
+      }
     } catch (err) {
       console.log(err)
     }
@@ -51,5 +63,5 @@ export const useSignUpCardController = () => {
     // }
   }
 
-  return { handleUsernameChange, handlePasswordChange, handleFileChange, handleOnSubmit }
+  return { handleUsernameChange, handlePasswordChange, handleEmailChange, handleOnSubmit }
 }

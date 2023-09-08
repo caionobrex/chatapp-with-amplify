@@ -9,6 +9,7 @@ export default function Home() {
     loadingRooms,
     messages,
     loadingMessages,
+    currentUserId,
     handleJoinRoom,
     handleSignOut,
     handleCreateRoom,
@@ -53,7 +54,7 @@ export default function Home() {
                 ) : (
                   <ul className="flex flex-col gap-y-4">
                     {messages.map((message) => (
-                      <li key={message.id} className={`bg-gray-200 px-2 self-end`}>
+                      <li key={message.id} className={`bg-gray-200 px-2 ${currentUserId === message.userMessagesId ? 'self-end' : 'self-start'}`}>
                         {message.body}
                       </li>
                     ))}

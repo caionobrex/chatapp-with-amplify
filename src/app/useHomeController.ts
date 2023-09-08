@@ -15,18 +15,18 @@ export const useHomeController = () => {
   const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null)
   const [loadingRooms, setLoadingRoom] = useState(true)
   const [loadingMessages, setLoadingMessages] = useState(true)
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null)
 
   const handleOnSendMessage = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const message = event.currentTarget.message.value
-    const currentUser = await Auth.currentAuthenticatedUser()
 
-    if (!selectedRoomId || !message || !currentUser) return
+    if (!selectedRoomId || !message || !currentUserId) return
 
     const input: CreateMessageInput = {
       body: message,
       roomMessagesId: selectedRoomId,
-      userMessagesId: currentUser.attributes.sub // TODO - get user ID
+      userMessagesId: currentUserId,
     }
     try {
       const messageField = document.getElementById('#message') as HTMLInputElement
@@ -81,7 +81,7 @@ export const useHomeController = () => {
       query: listMessages, variables: { filter: { roomMessagesId: { eq: roomId } } },
       authMode: 'AMAZON_COGNITO_USER_POOLS'
     })
-    setMessages(data?.listMessages?.items ?? [])
+    setMessages(data?.listMessages?.items.sort((a, b) => a.createdAt.localeCompare(b.createdAt)) ?? [])
     setLoadingMessages(false)
   }, [setLoadingMessages, setMessages])
 
@@ -120,12 +120,20 @@ export const useHomeController = () => {
     }).subscribe({
       next: ({ value }) => {
         if (value.data?.onCreateMessage) {
-          setMessages((current) => [value.data!.onCreateMessage as Message, ...current])
+          setMessages((current) => [...current, value.data!.onCreateMessage as Message])
         }
       }
     })
     return () => sub.unsubscribe()
   }, [setMessages])
+
+  useEffect(() => {
+    if (!currentUserId) {
+      Auth.currentAuthenticatedUser().then((user) => {
+        setCurrentUserId(user.attributes.sub)
+      })
+    }
+  }, [setCurrentUserId, currentUserId])
 
   return {
     rooms,
@@ -133,6 +141,7 @@ export const useHomeController = () => {
     loadingRooms,
     messages,
     loadingMessages,
+    currentUserId,
     handleJoinRoom,
     handleSignOut,
     handleCreateRoom,
