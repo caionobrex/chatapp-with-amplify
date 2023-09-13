@@ -1,11 +1,11 @@
-import { CreateMessageInput, CreateMessageMutation, CreateRoomInput, CreateRoomMutation, GetRoomQuery, ListMessagesQuery, ListRoomsQuery, Message, OnCreateMessageSubscription, OnCreateRoomSubscription, Room } from "@/API"
+import { CreateMessageInput, CreateMessageMutation, CreateRoomInput, CreateRoomMutation, GetRoomQuery, ListRoomsQuery, OnCreateMessageSubscription, OnCreateRoomSubscription, Room } from "@/API"
+import awsConfig from '@/aws-exports'
 import { createMessage, createRoom } from "@/graphql/mutations"
-import { getRoom, listMessages, listRooms } from "@/graphql/queries"
+import { getRoom, listRooms } from "@/graphql/queries"
 import { onCreateMessage, onCreateRoom } from "@/graphql/subscriptions"
 import { GraphQLQuery, GraphQLSubscription } from '@aws-amplify/api'
 import { API, Amplify, Auth } from "aws-amplify"
-import { useCallback, useEffect, useState } from "react"
-import awsConfig from '@/aws-exports'
+import { useEffect, useState } from "react"
 
 Amplify.configure(awsConfig)
 

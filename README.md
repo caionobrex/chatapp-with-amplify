@@ -1,5 +1,7 @@
 This is a web chat app build using [Next.js](https://nextjs.org/) and [Amplify](https://aws.amazon.com/amplify/) to easily build our backend
 
+[Simple video of this application](https://www.youtube.com/watch?v=UJTxG9IvX_4)
+
 # This project is working but it's not finished
 
 ## AWS services that this application uses
