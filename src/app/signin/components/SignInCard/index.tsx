@@ -1,6 +1,6 @@
 'use client'
 
-import { useSignInCardController } from "./useSignInCardController"
+import { useSignInCardController } from './useSignInCardController'
 
 export const SignInCard = () => {
   const  { handleUsernameChange, handlePasswordChange, handleOnSubmit } = useSignInCardController()

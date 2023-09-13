@@ -1,6 +1,6 @@
 import awsConfig from '@/aws-exports'
-import { Amplify, Auth } from "aws-amplify"
-import { useState } from "react"
+import { Amplify, Auth } from 'aws-amplify'
+import { useState } from 'react'
 
 Amplify.configure(awsConfig)
 

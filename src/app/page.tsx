@@ -1,6 +1,6 @@
 'use client'
 
-import { useHomeController } from "./useHomeController"
+import { useHomeController } from './useHomeController'
 
 export default function Home() {
   const {

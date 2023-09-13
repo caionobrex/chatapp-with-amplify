@@ -1,6 +1,6 @@
 'use client'
 
-import { useSignUpCardController } from "./useSignUpCardController"
+import { useSignUpCardController } from './useSignUpCardController'
 
 export const SignUpCard = () => {
   const {

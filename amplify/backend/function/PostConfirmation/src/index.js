@@ -13,16 +13,16 @@ Amplify Params - DO NOT EDIT */
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
  */
 exports.handler = async (event) => {
-    console.log(`EVENT: ${JSON.stringify(event)}`);
+    console.log(`EVENT: ${JSON.stringify(event)}`)
     if (event.request.userAttributes.sub) {
-        const { userName, request: { userAttributes: { sub } } } = event;
+        const { userName, request: { userAttributes: { sub } } } = event
         const params = {
             TableName: 'User-ywrnshs2e5ggba2dbsmfryw4ja-dev',
             Item: {
                 'id': { S: sub },
                 'username': { S: userName },
             },
-        };
+        }
         try {
             await ddb.putItem(params).promise()
             console.log('Success')
@@ -31,4 +31,4 @@ exports.handler = async (event) => {
             console.log('Error saving user to database')
         }
     }
-};
+}
