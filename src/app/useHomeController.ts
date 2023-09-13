@@ -1,6 +1,6 @@
-import { CreateMessageInput, CreateMessageMutation, CreateRoomInput, CreateRoomMutation, ListMessagesQuery, ListRoomsQuery, Message, OnCreateMessageSubscription, OnCreateRoomSubscription, Room } from "@/API"
+import { CreateMessageInput, CreateMessageMutation, CreateRoomInput, CreateRoomMutation, GetRoomQuery, ListMessagesQuery, ListRoomsQuery, Message, OnCreateMessageSubscription, OnCreateRoomSubscription, Room } from "@/API"
 import { createMessage, createRoom } from "@/graphql/mutations"
-import { listMessages, listRooms } from "@/graphql/queries"
+import { getRoom, listMessages, listRooms } from "@/graphql/queries"
 import { onCreateMessage, onCreateRoom } from "@/graphql/subscriptions"
 import { GraphQLQuery, GraphQLSubscription } from '@aws-amplify/api'
 import { API, Amplify, Auth } from "aws-amplify"
@@ -11,8 +11,8 @@ Amplify.configure(awsConfig)
 
 export const useHomeController = () => {
   const [rooms, setRooms] = useState<Room[]>([])
-  const [messages, setMessages] = useState<Message[]>([])
   const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null)
+  const [selectedRoom, setSelectedRoom] = useState<Room | null>(null)
   const [loadingRooms, setLoadingRoom] = useState(true)
   const [loadingMessages, setLoadingMessages] = useState(true)
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
@@ -75,21 +75,12 @@ export const useHomeController = () => {
     }
   }
 
-  const fetchMessages = useCallback(async (roomId: string) => {
-    setLoadingMessages(true)
-    const { data } = await API.graphql<GraphQLQuery<ListMessagesQuery>>({ 
-      query: listMessages, variables: { filter: { roomMessagesId: { eq: roomId } } },
-      authMode: 'AMAZON_COGNITO_USER_POOLS'
-    })
-    setMessages(data?.listMessages?.items.sort((a, b) => a.createdAt.localeCompare(b.createdAt)) ?? [])
-    setLoadingMessages(false)
-  }, [setLoadingMessages, setMessages])
-
-  const handleJoinRoom = (roomId: string) => () => {
+  const handleJoinRoom = (roomId: string) => async () => {
     const willUserJoinRoom = confirm('Join room ?')
     if (willUserJoinRoom) {
       setSelectedRoomId(roomId)
-      fetchMessages(roomId)
+      const { data } = await API.graphql<GraphQLQuery<GetRoomQuery>>({ query: getRoom, variables: { id: roomId }, authMode: 'AMAZON_COGNITO_USER_POOLS'  })
+      setSelectedRoom(data?.getRoom)
     }
   }
 
@@ -120,12 +111,12 @@ export const useHomeController = () => {
     }).subscribe({
       next: ({ value }) => {
         if (value.data?.onCreateMessage) {
-          setMessages((current) => [...current, value.data!.onCreateMessage as Message])
+          setSelectedRoom((current) => ({ ...current, messages: { items: [...current?.messages?.items, value.data?.onCreateMessage] } }))
         }
       }
     })
     return () => sub.unsubscribe()
-  }, [setMessages])
+  }, [setRooms])
 
   useEffect(() => {
     if (!currentUserId) {
@@ -139,9 +130,9 @@ export const useHomeController = () => {
     rooms,
     selectedRoomId,
     loadingRooms,
-    messages,
     loadingMessages,
     currentUserId,
+    selectedRoom,
     handleJoinRoom,
     handleSignOut,
     handleCreateRoom,

@@ -7,7 +7,7 @@ export default function Home() {
     rooms,
     selectedRoomId,
     loadingRooms,
-    messages,
+    selectedRoom,
     loadingMessages,
     currentUserId,
     handleJoinRoom,
@@ -44,18 +44,18 @@ export default function Home() {
           </div>
         </div>
         <div className="flex-1 p-3">
-          {loadingMessages ? (
+          {!selectedRoom ? (
             <div>Loading</div>
           ) : (
             <>
               <div className="bg-gray-50 p-2 h-96 overflow-auto">
-                {messages.length === 0 ? (
+                {selectedRoom.messages?.items.length === 0 ? (
                   <span>Nenhuma mensagem</span>
                 ) : (
                   <ul className="flex flex-col gap-y-4">
-                    {messages.map((message) => (
-                      <li key={message.id} className={`bg-gray-200 px-2 ${currentUserId === message.userMessagesId ? 'self-end' : 'self-start'}`}>
-                        {message.body}
+                    {selectedRoom.messages?.items.map((message) => (
+                      <li key={message!.id} className={`bg-gray-200 px-2 ${currentUserId === message!.userMessagesId ? 'self-end' : 'self-start'}`}>
+                        {message!.body}
                       </li>
                     ))}
                   </ul>
